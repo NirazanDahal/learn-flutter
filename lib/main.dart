@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/helpers/shared_preferences_helper.dart';
 import 'package:learn_flutter/pages/home_page.dart';
 
-void main(){
+void main()async{
+  WidgetsFlutterBinding.ensureInitialized();
+await  SharedPreferencesHelper.initialize();
   runApp(const MyApp());
 }
 
