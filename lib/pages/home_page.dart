@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 250,
             child: ListView.builder(
+              itemCount: _todoList.length,
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(_todoList[index] ?? "No Todos Yet"),
