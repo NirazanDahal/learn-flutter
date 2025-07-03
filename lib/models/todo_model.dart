@@ -1,13 +1,26 @@
 import 'dart:convert';
 
 class TodoModel {
-  final String title;
-  final String subtitle;
+  final String firstName;
+  final String middleName;
+  final String? lastName;
+  final String? address;
+  final int? age;
+  final DateTime? dateofBirth;
+  final bool? isMarried;
 
-  TodoModel({required this.title, required this.subtitle});
+  TodoModel({
+    required this.firstName,
+    required this.middleName,
+    this.lastName,
+    this.address,
+    this.age,
+    this.dateofBirth,
+    this.isMarried,
+  });
 
   Map<String, dynamic> toMap() {
-    return {'title': title, 'subtitle': subtitle};
+    return {'firstName': firstName, 'middleName': middleName};
   }
 
   factory TodoModel.fromMap(Map<String, dynamic> map) {
