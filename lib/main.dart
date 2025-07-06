@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/helpers/shared_preferences_helper.dart';
-import 'package:learn_flutter/pages/home_page.dart';
+import 'package:learn_flutter/pages/add_cv_page.dart';
+import 'package:learn_flutter/pages/cv_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: TodoPage());
+    return MaterialApp(home: AddCVPage());
   }
 }
