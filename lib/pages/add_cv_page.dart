@@ -1,11 +1,10 @@
 import 'dart:developer';
-
-import 'package:date_picker_textfield/date_picker_textfield.dart';
 import 'package:datepicker_cupertino/datepicker_cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:learn_flutter/helpers/shared_preferences_helper.dart';
 import 'package:learn_flutter/models/cv_model.dart';
-import 'package:learn_flutter/pages/cv_page.dart';
+import 'package:learn_flutter/pages/cv_page_widget.dart';
 
 class AddCVPage extends StatefulWidget {
   const AddCVPage({super.key});
@@ -20,9 +19,28 @@ class _AddCVPageState extends State<AddCVPage> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
   bool isMarried = false;
   DateTime dateOfBirth = DateTime.now();
   List<CVModel> cvList = [];
+  String imageString = "";
+
+  Future<void> pickImageFromCamera() async {
+    final image = await _picker.pickImage(
+      source: ImageSource.camera,
+      preferredCameraDevice: CameraDevice.front,
+    );
+    setState(() {
+      imageString = image.toString();
+    });
+    log(imageString);
+  }
+
+  // @override
+  // void initState() {
+  //   cvList = SharedPreferencesHelper.loadCV(SharedPreferencesHelper.cvListKey);
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +115,12 @@ class _AddCVPageState extends State<AddCVPage> {
 
           ElevatedButton(
             onPressed: () {
+              pickImageFromCamera();
+            },
+            child: Row(children: [Text("Upload Image"), Icon(Icons.camera)]),
+          ),
+          ElevatedButton(
+            onPressed: () {
               setState(() {
                 cvList.add(
                   CVModel(
@@ -107,6 +131,7 @@ class _AddCVPageState extends State<AddCVPage> {
                     age: _ageController.text.trim(),
                     dateofBirth: dateOfBirth.toString(),
                     isMarried: isMarried,
+                    image: pickImageFromCamera().toString(),
                   ),
                 );
                 SharedPreferencesHelper.saveCV(

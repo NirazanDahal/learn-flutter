@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/helpers/shared_preferences_helper.dart';
 import 'package:learn_flutter/pages/add_cv_page.dart';
-import 'package:learn_flutter/pages/cv_page.dart';
+import 'package:learn_flutter/pages/cv_page_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
