@@ -1,49 +1,29 @@
-import 'dart:developer';
 import 'package:datepicker_cupertino/datepicker_cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:learn_flutter/helpers/shared_preferences_helper.dart';
 import 'package:learn_flutter/models/cv_model.dart';
 import 'package:learn_flutter/pages/cv_page_widget.dart';
+import 'package:learn_flutter/providers/cv_provider.dart';
+import 'package:provider/provider.dart';
 
-class AddCVPage extends StatefulWidget {
-  const AddCVPage({super.key});
-
-  @override
-  State<AddCVPage> createState() => _AddCVPageState();
-}
-
-class _AddCVPageState extends State<AddCVPage> {
+class AddCVPage extends StatelessWidget {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _middleNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
-  bool isMarried = false;
-  DateTime dateOfBirth = DateTime.now();
   List<CVModel> cvList = [];
-  String imageString = "";
 
-  Future<void> pickImageFromCamera() async {
-    final image = await _picker.pickImage(
-      source: ImageSource.camera,
-      preferredCameraDevice: CameraDevice.front,
-    );
-    setState(() {
-      imageString = image.toString();
-    });
-    log(imageString);
-  }
+  String imageString = '';
 
-  // @override
-  // void initState() {
-  //   cvList = SharedPreferencesHelper.loadCV(SharedPreferencesHelper.cvListKey);
-  //   super.initState();
-  // }
+  ImagePicker _imagePicker = ImagePicker();
+
+  AddCVPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cvProvider = context.read<CvProvider>();
     return Scaffold(
       appBar: AppBar(title: Text("Create CV"), backgroundColor: Colors.green),
       body: Column(
@@ -89,56 +69,36 @@ class _AddCVPageState extends State<AddCVPage> {
             ),
           ),
           SizedBox(height: 10),
-          Row(
-            children: [
-              Checkbox(
-                value: isMarried,
-                onChanged: (value) {
-                  setState(() {
-                    isMarried = value ?? false;
-                  });
-                  log(isMarried.toString());
-                },
-              ),
-
-              Text("Married"),
-            ],
-          ),
-          DatePickerCupertino(
-            hintText: "DOB",
-            onDateTimeChanged: (p0) {
-              setState(() {
-                dateOfBirth = p0;
-              });
-            },
-          ),
 
           ElevatedButton(
             onPressed: () {
-              pickImageFromCamera();
+              final _pickedImage = _imagePicker.pickImage(
+                source: ImageSource.camera,
+                // preferredCameraDevice: CameraDevice.front,
+              );
             },
-            child: Row(children: [Text("Upload Image"), Icon(Icons.camera)]),
+            child: Text("Pick Image"),
           ),
+
+          // DatePickerCupertino(
+          //   hintText: "DOB",
+          //   onDateTimeChanged: (p0) {
+          //     dateOfBirth = p0;
+          //   },
+          // ),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                cvList.add(
-                  CVModel(
-                    firstName: _firstNameController.text.trim(),
-                    middleName: _middleNameController.text.trim(),
-                    lastName: _lastNameController.text.trim(),
-                    address: _addressController.text.trim(),
-                    age: _ageController.text.trim(),
-                    dateofBirth: dateOfBirth.toString(),
-                    isMarried: isMarried,
-                    image: pickImageFromCamera().toString(),
-                  ),
-                );
-                SharedPreferencesHelper.saveCV(
-                  SharedPreferencesHelper.cvListKey,
-                  cvList,
-                );
-              });
+              cvList.add(
+                CVModel(
+                  firstName: _firstNameController.text.trim(),
+                  middleName: _middleNameController.text.trim(),
+                  lastName: _lastNameController.text.trim(),
+                  address: _addressController.text.trim(),
+                  age: _ageController.text.trim(),
+                  imageString: "",
+                ),
+              );
+              cvProvider.saveCV(SharedPreferencesHelper.cvListKey, cvList);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => CVPage()),

@@ -6,9 +6,7 @@ class CVModel {
   final String lastName;
   final String address;
   final String age;
-  final String dateofBirth;
-  final bool isMarried;
-  final String image;
+  final String imageString;
 
   CVModel({
     required this.firstName,
@@ -16,9 +14,7 @@ class CVModel {
     required this.lastName,
     required this.address,
     required this.age,
-    required this.dateofBirth,
-    required this.isMarried,
-    required this.image,
+    required this.imageString,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,9 +24,7 @@ class CVModel {
       'lastName': lastName,
       'address': address,
       'age': age,
-      'dateofBirth': dateofBirth,
-      'isMarried': isMarried,
-      'image': image,
+      'imageString': imageString,
     };
   }
 
@@ -41,9 +35,7 @@ class CVModel {
       lastName: map['lastName'],
       address: map['address'],
       age: map['age'],
-      dateofBirth: map['dateofBirth'],
-      isMarried: map['isMarried'],
-      image: map['image'],
+      imageString: map['imageString'],
     );
   }
 

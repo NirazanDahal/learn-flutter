@@ -35,8 +35,6 @@ class _CVPageState extends State<CVPage> {
                     Text(cv.lastName),
                     Text(cv.age),
                     Text(cv.address),
-                    Text(cv.dateofBirth.toString()),
-                    Text(cv.isMarried ? "Married" : "Unmarried"),
                   ],
                 );
         },
