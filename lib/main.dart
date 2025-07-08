@@ -6,11 +6,20 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferencesHelper.init();
-  runApp(
-    MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => CvProvider())],
-      child: MaterialApp(home: AddCVPage()),
-    ),
-  );
+  await SharedPreferencesHelper.initialize();
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: ChangeNotifierProvider(
+        create: (context) => CvProvider(),
+        child: AddCVPage(),
+      ),
+    );
+  }
 }

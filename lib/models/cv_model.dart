@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class CVModel {
+class CvModel {
   final String firstName;
   final String middleName;
   final String lastName;
@@ -8,7 +8,7 @@ class CVModel {
   final String age;
   final String imageString;
 
-  CVModel({
+  CvModel({
     required this.firstName,
     required this.middleName,
     required this.lastName,
@@ -28,8 +28,8 @@ class CVModel {
     };
   }
 
-  factory CVModel.fromMap(Map<String, dynamic> map) {
-    return CVModel(
+  factory CvModel.fromMap(Map<String, dynamic> map) {
+    return CvModel(
       firstName: map['firstName'],
       middleName: map['middleName'],
       lastName: map['lastName'],
@@ -43,7 +43,7 @@ class CVModel {
     return jsonEncode(toMap());
   }
 
-  factory CVModel.fromJson(String json) {
-    return CVModel.fromMap(jsonDecode(json));
+  factory CvModel.fromJson(String json) {
+    return CvModel.fromMap(jsonDecode(json));
   }
 }

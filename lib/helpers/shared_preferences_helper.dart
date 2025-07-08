@@ -2,20 +2,20 @@ import 'package:learn_flutter/models/cv_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
-  static const String cvListKey = "todoKey";
+  static const String cvListKey = "cvListKey";
   static late SharedPreferences _preferences;
-
-  static Future<void> init() async {
+  static Future<void> initialize() async {
     _preferences = await SharedPreferences.getInstance();
   }
 
-  static Future<void> saveCV(String key, List<CVModel> todos) async {
-    List<String> jsonList = todos.map((todo) => todo.toJson()).toList();
-    await _preferences.setStringList(key, jsonList);
+  static Future<void> saveCVs(List<CvModel> cvList) async {
+    final jsonList = cvList.map((cv) => cv.toJson()).toList();
+    await _preferences.setStringList(cvListKey, jsonList);
   }
 
-  static List<CVModel> loadCV(String key) {
-    List<String> jsonList = _preferences.getStringList(key) ?? [];
-    return jsonList.map((json) => CVModel.fromJson(json)).toList();
+  static List<CvModel> loadCVs() {
+    final jsonList = _preferences.getStringList(cvListKey) ?? [];
+    final cvModel = jsonList.map((json) => CvModel.fromJson(json)).toList();
+    return cvModel;
   }
 }

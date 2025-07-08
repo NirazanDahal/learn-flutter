@@ -1,9 +1,9 @@
-import 'package:datepicker_cupertino/datepicker_cupertino.dart';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:learn_flutter/helpers/shared_preferences_helper.dart';
 import 'package:learn_flutter/models/cv_model.dart';
-import 'package:learn_flutter/pages/cv_page_widget.dart';
 import 'package:learn_flutter/providers/cv_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,98 +13,82 @@ class AddCVPage extends StatelessWidget {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
-  List<CVModel> cvList = [];
-
-  String imageString = '';
-
   ImagePicker _imagePicker = ImagePicker();
 
   AddCVPage({super.key});
 
+  void _addCV(BuildContext context, String imageString) {
+    final cv = CvModel(
+      firstName: _firstNameController.text.trim(),
+      middleName: _middleNameController.text.trim(),
+      lastName: _lastNameController.text.trim(),
+      address: _addressController.text.trim(),
+      age: _ageController.text.trim(),
+      imageString: imageString,
+    );
+
+    context.read<CvProvider>().saveCVs(cv);
+    _firstNameController.clear();
+    _middleNameController.clear();
+    _lastNameController.clear();
+    _addressController.clear();
+    _ageController.clear();
+  }
+
+  Future<void> _pickImage(BuildContext context) async {
+    final imageFile = await _imagePicker.pickImage(source: ImageSource.camera);
+    final imageBytes = await File(imageFile.toString()).readAsBytes();
+    final imageString = base64Encode(imageBytes);
+    context.read<CvProvider>().pickImage(imageString);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final cvProvider = context.read<CvProvider>();
+    final cvProvider = context.watch<CvProvider>();
     return Scaffold(
-      appBar: AppBar(title: Text("Create CV"), backgroundColor: Colors.green),
+      appBar: AppBar(title: Text("Add CV Page")),
       body: Column(
         children: [
-          SizedBox(height: 20),
-          TextFormField(
-            controller: _firstNameController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "First Name",
-            ),
-          ),
-          SizedBox(height: 10),
-          TextFormField(
-            controller: _middleNameController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Middle Name",
-            ),
-          ),
-          SizedBox(height: 10),
-          TextFormField(
-            controller: _lastNameController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Last Name",
-            ),
-          ),
-          SizedBox(height: 10),
-          TextFormField(
-            controller: _addressController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Address",
-            ),
-          ),
-          SizedBox(height: 10),
-          TextFormField(
-            controller: _ageController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Age",
-            ),
-          ),
-          SizedBox(height: 10),
+          TextFormField(controller: _firstNameController),
+          TextFormField(controller: _middleNameController),
 
+          TextFormField(controller: _lastNameController),
+
+          TextFormField(controller: _addressController),
+
+          TextFormField(controller: _ageController),
           ElevatedButton(
             onPressed: () {
-              final _pickedImage = _imagePicker.pickImage(
-                source: ImageSource.camera,
-                // preferredCameraDevice: CameraDevice.front,
-              );
+              _pickImage(context);
             },
             child: Text("Pick Image"),
           ),
-
-          // DatePickerCupertino(
-          //   hintText: "DOB",
-          //   onDateTimeChanged: (p0) {
-          //     dateOfBirth = p0;
-          //   },
-          // ),
           ElevatedButton(
             onPressed: () {
-              cvList.add(
-                CVModel(
-                  firstName: _firstNameController.text.trim(),
-                  middleName: _middleNameController.text.trim(),
-                  lastName: _lastNameController.text.trim(),
-                  address: _addressController.text.trim(),
-                  age: _ageController.text.trim(),
-                  imageString: "",
-                ),
-              );
-              cvProvider.saveCV(SharedPreferencesHelper.cvListKey, cvList);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => CVPage()),
-              );
+              _addCV(context, cvProvider.imageString);
             },
-            child: Text("Submit"),
+            child: Text("Add CV"),
+          ),
+
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return cvProvider.cvList.isEmpty
+                    ? Center(child: Text("No CV's yet"))
+                    : Column(
+                        children: [
+                          Text(cvProvider.cvList[index].firstName),
+                          Text(cvProvider.cvList[index].middleName),
+                          Text(cvProvider.cvList[index].lastName),
+                          Text(cvProvider.cvList[index].address),
+                          Text(cvProvider.cvList[index].age),
+                          Image.memory(
+                            base64Decode(cvProvider.cvList[index].imageString),
+                          ),
+                        ],
+                      );
+              },
+            ),
           ),
         ],
       ),
