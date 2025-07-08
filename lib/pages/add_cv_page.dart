@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -37,8 +38,9 @@ class AddCVPage extends StatelessWidget {
 
   Future<void> _pickImage(BuildContext context) async {
     final imageFile = await _imagePicker.pickImage(source: ImageSource.camera);
-    final imageBytes = await File(imageFile.toString()).readAsBytes();
+    final imageBytes = await imageFile!.readAsBytes();
     final imageString = base64Encode(imageBytes);
+    log(imageString);
     context.read<CvProvider>().pickImage(imageString);
   }
 
@@ -58,8 +60,8 @@ class AddCVPage extends StatelessWidget {
 
           TextFormField(controller: _ageController),
           ElevatedButton(
-            onPressed: () {
-              _pickImage(context);
+            onPressed: () async {
+              await _pickImage(context);
             },
             child: Text("Pick Image"),
           ),
@@ -72,9 +74,10 @@ class AddCVPage extends StatelessWidget {
 
           Expanded(
             child: ListView.builder(
+              itemCount: cvProvider.cvList.length,
               itemBuilder: (context, index) {
                 return cvProvider.cvList.isEmpty
-                    ? Center(child: Text("No CV's yet"))
+                    ? Text("No CV's yet")
                     : Column(
                         children: [
                           Text(cvProvider.cvList[index].firstName),
