@@ -9,7 +9,9 @@ class CvProvider extends ChangeNotifier {
   String get imageString => _imageString;
 
   CvProvider() {
-    _loadCVs();
+    if (_cvList.isNotEmpty) {
+      _loadCVs();
+    }
   }
 
   void pickImage(String imageString) {

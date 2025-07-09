@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/helpers/shared_preferences_helper.dart';
 import 'package:learn_flutter/pages/add_cv_page.dart';
+import 'package:learn_flutter/pages/display_cv_page.dart';
 import 'package:learn_flutter/providers/cv_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -15,11 +16,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ChangeNotifierProvider(
-        create: (context) => CvProvider(),
-        child: AddCVPage(),
-      ),
+    return ChangeNotifierProvider(
+      create: (context) => CvProvider(),
+      child: MaterialApp(home: AddCVPage()),
     );
   }
 }

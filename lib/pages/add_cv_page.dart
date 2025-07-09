@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:learn_flutter/models/cv_model.dart';
+import 'package:learn_flutter/pages/display_cv_page.dart';
 import 'package:learn_flutter/providers/cv_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -22,22 +24,29 @@ class AddCVPage extends StatelessWidget {
     context.read<CvProvider>().clearAllCVs();
   }
 
-  void _addCV(BuildContext context, String imageString) {
-    final cv = CvModel(
-      firstName: _firstNameController.text.trim(),
-      middleName: _middleNameController.text.trim(),
-      lastName: _lastNameController.text.trim(),
-      address: _addressController.text.trim(),
-      age: _ageController.text.trim(),
-      imageString: imageString,
-    );
+  bool _addCV(BuildContext context, String imageString) {
+    try {
+      final cv = CvModel(
+        firstName: _firstNameController.text.trim(),
+        middleName: _middleNameController.text.trim(),
+        lastName: _lastNameController.text.trim(),
+        address: _addressController.text.trim(),
+        age: _ageController.text.trim(),
+        imageString: imageString,
+      );
 
-    context.read<CvProvider>().saveCVs(cv);
-    _firstNameController.clear();
-    _middleNameController.clear();
-    _lastNameController.clear();
-    _addressController.clear();
-    _ageController.clear();
+      context.read<CvProvider>().saveCVs(cv);
+      _firstNameController.clear();
+      _middleNameController.clear();
+      _lastNameController.clear();
+      _addressController.clear();
+      _ageController.clear();
+
+      return true;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
   }
 
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
@@ -45,7 +54,7 @@ class AddCVPage extends StatelessWidget {
     if (imageFile == null) return;
     final imageBytes = await imageFile.readAsBytes();
     final imageString = base64Encode(imageBytes);
-    log(imageString);
+    // log(imageString);
     context.read<CvProvider>().pickImage(imageString);
   }
 
@@ -92,32 +101,22 @@ class AddCVPage extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              _addCV(context, cvProvider.imageString);
+              final success = _addCV(context, cvProvider.imageString);
+              if (success) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Cv added successfully")),
+                );
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) => DisplayCVPage()),
+                );
+                log("Cv was added successfully");
+              } else {
+                log("Error adding cv");
+                return;
+              }
             },
             child: Text("Add CV"),
-          ),
-
-          Expanded(
-            child: ListView.builder(
-              itemCount: cvProvider.cvList.length,
-              itemBuilder: (context, index) {
-                return cvProvider.cvList.isEmpty
-                    ? Text("No CV's yet")
-                    : Column(
-                        children: [
-                          Text(cvProvider.cvList[index].firstName),
-                          Text(cvProvider.cvList[index].middleName),
-                          Text(cvProvider.cvList[index].lastName),
-                          Text(cvProvider.cvList[index].address),
-                          Text(cvProvider.cvList[index].age),
-                          Image.memory(
-                            height: 100,
-                            base64Decode(cvProvider.cvList[index].imageString),
-                          ),
-                        ],
-                      );
-              },
-            ),
           ),
         ],
       ),
