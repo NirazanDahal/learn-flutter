@@ -18,6 +18,10 @@ class AddCVPage extends StatelessWidget {
 
   AddCVPage({super.key});
 
+  void _clearCVs(BuildContext context) {
+    context.read<CvProvider>().clearAllCVs();
+  }
+
   void _addCV(BuildContext context, String imageString) {
     final cv = CvModel(
       firstName: _firstNameController.text.trim(),
@@ -36,9 +40,10 @@ class AddCVPage extends StatelessWidget {
     _ageController.clear();
   }
 
-  Future<void> _pickImage(BuildContext context) async {
-    final imageFile = await _imagePicker.pickImage(source: ImageSource.camera);
-    final imageBytes = await imageFile!.readAsBytes();
+  Future<void> _pickImage(BuildContext context, ImageSource source) async {
+    final imageFile = await _imagePicker.pickImage(source: source);
+    if (imageFile == null) return;
+    final imageBytes = await imageFile.readAsBytes();
     final imageString = base64Encode(imageBytes);
     log(imageString);
     context.read<CvProvider>().pickImage(imageString);
@@ -48,7 +53,17 @@ class AddCVPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final cvProvider = context.watch<CvProvider>();
     return Scaffold(
-      appBar: AppBar(title: Text("Add CV Page")),
+      appBar: AppBar(
+        title: Text("Add CV Page"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _clearCVs(context);
+            },
+            icon: Icon(Icons.clear),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           TextFormField(controller: _firstNameController),
@@ -59,11 +74,21 @@ class AddCVPage extends StatelessWidget {
           TextFormField(controller: _addressController),
 
           TextFormField(controller: _ageController),
-          ElevatedButton(
-            onPressed: () async {
-              await _pickImage(context);
-            },
-            child: Text("Pick Image"),
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await _pickImage(context, ImageSource.camera);
+                },
+                child: Icon(Icons.camera),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await _pickImage(context, ImageSource.gallery);
+                },
+                child: Icon(Icons.browse_gallery),
+              ),
+            ],
           ),
           ElevatedButton(
             onPressed: () {
@@ -86,6 +111,7 @@ class AddCVPage extends StatelessWidget {
                           Text(cvProvider.cvList[index].address),
                           Text(cvProvider.cvList[index].age),
                           Image.memory(
+                            height: 100,
                             base64Decode(cvProvider.cvList[index].imageString),
                           ),
                         ],

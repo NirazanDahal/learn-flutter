@@ -29,6 +29,11 @@ class CvProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearAllCVs() {
+    _cvList.clear();
+    SharedPreferencesHelper.saveCVs(_cvList);
+  }
+
   void _loadCVs() {
     _cvList = SharedPreferencesHelper.loadCVs();
   }

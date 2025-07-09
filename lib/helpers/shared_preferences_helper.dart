@@ -18,4 +18,8 @@ class SharedPreferencesHelper {
     final cvModel = jsonList.map((json) => CvModel.fromJson(json)).toList();
     return cvModel;
   }
+
+  static Future<void> clearAll() async {
+    await _preferences.clear();
+  }
 }
