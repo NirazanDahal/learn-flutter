@@ -38,6 +38,7 @@ dependencies:
   datepicker_cupertino: ^0.0.4
   provider: ^6.1.5
   image_picker: ^1.1.2
+  http: ^1.4.0
 
 dev_dependencies:
   flutter_test:

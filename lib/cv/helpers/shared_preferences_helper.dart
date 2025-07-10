@@ -1,4 +1,4 @@
-import 'package:learn_flutter/models/cv_model.dart';
+import 'package:learn_flutter/cv/models/cv_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {

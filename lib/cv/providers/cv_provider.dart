@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learn_flutter/helpers/shared_preferences_helper.dart';
-import 'package:learn_flutter/models/cv_model.dart';
+import 'package:learn_flutter/cv/helpers/shared_preferences_helper.dart';
+import 'package:learn_flutter/cv/models/cv_model.dart';
 
 class CvProvider extends ChangeNotifier {
   List<CvModel> _cvList = [];

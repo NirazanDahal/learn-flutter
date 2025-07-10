@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:learn_flutter/providers/cv_provider.dart';
+import 'package:learn_flutter/cv/providers/cv_provider.dart';
 import 'package:provider/provider.dart';
 
 class DisplayCVPage extends StatelessWidget {

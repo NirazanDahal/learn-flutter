@@ -5,9 +5,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:learn_flutter/models/cv_model.dart';
-import 'package:learn_flutter/pages/display_cv_page.dart';
-import 'package:learn_flutter/providers/cv_provider.dart';
+import 'package:learn_flutter/cv/models/cv_model.dart';
+import 'package:learn_flutter/cv/pages/display_cv_page.dart';
+import 'package:learn_flutter/cv/providers/cv_provider.dart';
 import 'package:provider/provider.dart';
 
 class AddCVPage extends StatelessWidget {
