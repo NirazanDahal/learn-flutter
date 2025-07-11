@@ -3,6 +3,9 @@ import 'package:learn_flutter/cv/pages/add_cv_page.dart';
 import 'package:learn_flutter/cv/providers/cv_provider.dart';
 import 'package:learn_flutter/user/provider/user_provider.dart';
 import 'package:learn_flutter/user/screens/user_screen.dart';
+import 'package:learn_flutter/userFromApi/providers/user_API_provider.dart';
+import 'package:learn_flutter/userFromApi/screens/login_screen.dart';
+import 'package:learn_flutter/userFromApi/screens/user_api_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -17,8 +20,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => UserProvider(),
-      child: MaterialApp(home: UserScreen()),
+      create: (context) => UserAPIProvider(),
+      child: MaterialApp(home: UserAPIScreen()),
     );
   }
 }
